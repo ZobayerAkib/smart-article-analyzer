@@ -50,7 +50,7 @@ Adjusting the resolution is recommended for the best experience.
 
 ---
 
-⚙️ Backend Setup
+## ⚙️ Backend Setup
 
 ### 1️⃣ Install dependencies
 
@@ -65,7 +65,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-🔗 Backend Endpoint
+## 🔗 Backend Endpoint
 POST /submit-article
 ```bash
 Request Body:
@@ -78,7 +78,7 @@ This forwards the payload to your n8n webhook for automated processing.
 
 -----
 
-🔧 Configure Your n8n Webhook
+## 🔧 Configure Your n8n Webhook
 
 Inside main.py, replace this:
 ```bash
@@ -88,7 +88,7 @@ with your actual webhook URL: "https://your-n8n-server.com/webhook/submit"
 
 -----
 
-🌐 Frontend Usage
+## 🌐 Frontend Usage
 
 Open: index.html
 Enter: Email and Article URL
@@ -97,7 +97,7 @@ Click Submit → your backend → n8n → summary email is sent 📩
 
 -----
 
-📤 Automation Flow (n8n)
+## 📤 Automation Flow (n8n)
 
 Your n8n workflow performs:
 
