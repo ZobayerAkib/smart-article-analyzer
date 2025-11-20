@@ -101,11 +101,11 @@ Click Submit → your backend → n8n → summary email is sent 📩
 
 Your n8n workflow performs:
 
-🟦 Fetch article content
-🟩 Process using OpenAI GPT
-🟧 Generate summary + insights
-🟨 Save to Google Sheet
-🟥 Send Email to User
+- 🟦 Fetch article content
+- 🟩 Process using OpenAI GPT
+- 🟧 Generate summary + insights
+- 🟨 Save to Google Sheet
+- 🟥 Send Email to User
 
 -----
 
