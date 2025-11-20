@@ -5,7 +5,8 @@ Convert any article URL into AI-generated summaries and insights, delivered dire
 ## 🎥 Demo Video (Google Drive)
 Adjusting the resolution is recommended for the best experience.
 
-![Demo Video](https://drive.google.com/file/d/1XdZJz5jcFpWXscVf7tK27P2xZzOlRD9u/view?usp=sharing)
+[![Watch the video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://drive.google.com/file/d/1XdZJz5jcFpWXscVf7tK27P2xZzOlRD9u/view?usp=sharing)
+
 
 ---
 
