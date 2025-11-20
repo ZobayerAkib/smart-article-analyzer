@@ -1,0 +1,329 @@
+{
+  "name": "Web Content Analysis and Reporting Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "analyze-content",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "ea53fb5f-ddf3-4f5d-96ab-a5886d69db41",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        6352,
+        896
+      ],
+      "webhookId": "582d8a8c-1ae6-47d6-9dbc-03f29a4bb519"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.article_url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5acda5b7-d520-4fe5-b864-a819ec794cf7",
+      "name": "Fetch Web Content via Firecrawl",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        6576,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1lh5w3fgum1vQ-EmJa8KCwGa-iGAirjzCHUhEs8jRBZo",
+          "mode": "list",
+          "cachedResultName": "N8N spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lh5w3fgum1vQ-EmJa8KCwGa-iGAirjzCHUhEs8jRBZo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lh5w3fgum1vQ-EmJa8KCwGa-iGAirjzCHUhEs8jRBZo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Session ID": "={{ $('Webhook').first().json.body.session_id }}",
+            "Article URL": "={{ $('Webhook').first().json.body.article_url }}",
+            "Summary": "={{ $('Summarize Content').item.json.output[0].content[0].text }}",
+            "Insights": "={{ $json.output[0].content[0].text }}",
+            "Email": "={{ $('Webhook').first().json.body.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Session ID",
+              "displayName": "Session ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article URL",
+              "displayName": "Article URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Insights",
+              "displayName": "Insights",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a540981e-d652-4457-a5b0-0e303cc802d2",
+      "name": "Append to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        7504,
+        896
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "CFKQCnXamy2EAtop",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').first().json.body.email }}",
+        "subject": "Web Content Analysis Complete",
+        "emailType": "text",
+        "message": "={{ 'Analysis completed for URL: ' + $('Webhook').first().json.body.article_url + '\\n\\nSummary: ' + $('Summarize Content').first().json.output[0].content[0].text + '\\n\\nInsights: ' + $('Extract Insights').first().json.output[0].content[0].text }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Md. Zobayer Ibna Kabir"
+        }
+      },
+      "id": "a678958c-ac45-4b78-87e6-85874e72e936",
+      "name": "Send Email Notification",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        7728,
+        896
+      ],
+      "webhookId": "327af437-ae7b-47cb-abe9-749ff9434fbd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "g6T7PMTgvTJVCSVp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-4o-mini"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.data }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "instructions": "You are a content summarization assistant. Read the provided web content and create a concise, clear summary that captures the main points and key information. Focus on the most important facts and insights. Keep the summary under 200 words."
+        }
+      },
+      "id": "d7af3228-4e7c-4388-9668-561a4e6f55ab",
+      "name": "Summarize Content",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        6800,
+        896
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "eutJYWGbW0wRDH2v",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-4.1-mini"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.output[0].content[0].text }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "instructions": "You are an insights analyst. Analyze the provided summary and extract actionable insights, key trends, and important takeaways. Identify:\n1. Main themes and patterns\n2. Notable facts or statistics\n3. Potential implications or opportunities\n4. Any concerns or risks mentioned\n\nProvide your analysis in a structured format with clear bullet points."
+        }
+      },
+      "id": "4b744201-0f5b-4a5c-9894-e79facddede4",
+      "name": "Extract Insights",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        7152,
+        896
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "eutJYWGbW0wRDH2v",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Analysis complete! Check your email for results.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        7952,
+        896
+      ],
+      "id": "8eea69b2-e2ac-494f-ac61-e4646a9141de",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Fetch Web Content via Firecrawl": {
+      "main": [
+        [
+          {
+            "node": "Summarize Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Send Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Content": {
+      "main": [
+        [
+          {
+            "node": "Extract Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Insights": {
+      "main": [
+        [
+          {
+            "node": "Append to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Web Content via Firecrawl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email Notification": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "774e6872-1117-49f9-a34f-d7f19d2eecee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c56accd10ba7fa3e536a97fd958905e72fe30a04b21f2ee461dd777df3b72d16"
+  },
+  "id": "Yvz9S1FeoWNVfMnz",
+  "tags": []
+}
