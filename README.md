@@ -1,4 +1,4 @@
-# 🚀 S mart Article Analyzer
+# 🚀 Smart Article Analyzer
 
 
 Convert any article URL into AI-generated summaries and insights, delivered directly to your email — fully automated using **FastAPI + n8n + OpenAI**.
