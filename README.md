@@ -67,11 +67,13 @@ uvicorn main:app --reload
 
 ## 🔗 Backend Endpoint
 POST /submit-article
+```bash
 Request Body:
 {
   "email": "user@example.com",
   "article_url": "https://example.com/article"
 }
+```
 This forwards the payload to your n8n webhook for automated processing.
 
 -----
