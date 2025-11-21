@@ -52,7 +52,7 @@ Adjusting the resolution is recommended for the best experience.
 
 ## ⚙️ Backend Setup
 
-### 1️⃣ Install dependencies
+1️⃣ Install dependencies
 
 ```bash
 pip install -r requirements.txt
